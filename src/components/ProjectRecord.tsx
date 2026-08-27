@@ -1,4 +1,5 @@
 import { Fragment, type ReactNode } from "react";
+import ProjectMedia from "@/components/ProjectMedia";
 import SpecList from "@/components/SpecList";
 import StatusChip from "@/components/StatusChip";
 import type { Project } from "@/content/projects";
@@ -40,6 +41,22 @@ export default function ProjectRecord({
         <StatusChip status={project.status} />
       </div>
 
+      {project.links && project.links.length > 0 && (
+        <div className="mb-[1.35rem] flex flex-wrap gap-2">
+          {project.links.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center gap-[0.55rem] rounded-[2px] border border-accent-line bg-accent-soft px-4 py-[0.55rem] font-mono text-xs font-medium tracking-[0.1em] text-accent uppercase transition-colors duration-150 hover:border-accent"
+            >
+              {link.label} →
+            </a>
+          ))}
+        </div>
+      )}
+
       <p className="mb-[1.35rem] max-w-measure text-ink-mid">
         {project.tagline}
       </p>
@@ -58,6 +75,16 @@ export default function ProjectRecord({
           </h4>
           <p className="text-ink-mid">{renderInlineBold(beat.body)}</p>
         </div>
+      ))}
+
+      {project.media?.map((item) => (
+        <ProjectMedia
+          key={item.src}
+          src={item.src}
+          alt={item.alt}
+          caption={item.caption}
+          className="mt-[1.6rem] mb-[0.35rem]"
+        />
       ))}
     </article>
   );

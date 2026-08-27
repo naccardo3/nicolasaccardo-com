@@ -70,6 +70,12 @@ export const projects: Project[] = [
     tags: ["python", "pipelines", "modeling", "react"],
     featured: true,
     demo: "model",
+    links: [
+      {
+        label: "Open the live app",
+        href: "https://nrfi-production-8bab.up.railway.app/",
+      },
+    ],
   },
   {
     slug: "photo-stamp-replacer",
@@ -102,6 +108,14 @@ export const projects: Project[] = [
     tags: ["python", "react"],
     featured: true,
     demo: "photo",
+    media: [
+      {
+        src: "/media/photo-stamp-replacer.jpg",
+        alt: "Photo Stamp Replacer desktop app window processing a batch of photos",
+        caption:
+          "The desktop app mid-batch, replacing timestamps on a folder of job-site photos.",
+      },
+    ],
   },
   {
     slug: "joc-weekly-schedule",
@@ -133,6 +147,13 @@ export const projects: Project[] = [
     tags: ["typescript", "react", "pipelines"],
     featured: true,
     demo: "board",
+    media: [
+      {
+        src: "/media/joc-weekly-schedule.jpg",
+        alt: "Wall-mounted TV display showing the JOC weekly crew schedule",
+        caption: "The board on the office wall, mid-week.",
+      },
+    ],
   },
   {
     slug: "sync",
@@ -163,6 +184,13 @@ export const projects: Project[] = [
     ],
     tags: ["python", "hardware"],
     featured: true,
+    media: [
+      {
+        src: "/media/sync.jpg",
+        alt: "The SYNC rehabilitative glove",
+        caption: "The glove, assembled.",
+      },
+    ],
   },
   {
     slug: "behavior-empowerment",
@@ -181,6 +209,13 @@ export const projects: Project[] = [
     featured: false,
     links: [
       { label: "Visit", href: "https://behaviorempowermentconsultation.org" },
+    ],
+    media: [
+      {
+        src: "/media/behavior-empowerment.jpg",
+        alt: "Behavior Empowerment Consultation homepage",
+        caption: "The live site.",
+      },
     ],
   },
   {

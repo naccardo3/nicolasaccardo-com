@@ -1,3 +1,4 @@
+import ProjectMedia from "@/components/ProjectMedia";
 import StatusChip from "@/components/StatusChip";
 import type { Project } from "@/content/projects";
 
@@ -8,6 +9,15 @@ export default function ProjectCard({ project }: { project: Project }) {
       data-tags={project.tags.join(" ")}
       className="relative flex flex-col gap-[0.7rem] bg-surface p-[1.4rem] px-[1.35rem] transition-colors duration-200 ease-out before:absolute before:inset-y-0 before:left-0 before:w-0.5 before:origin-top before:scale-y-0 before:bg-accent before:transition-transform before:duration-[240ms] before:ease-[cubic-bezier(0.2,0.7,0.3,1)] before:content-[''] hover:bg-raise hover:before:scale-y-100"
     >
+      {project.media?.map((item) => (
+        <ProjectMedia
+          key={item.src}
+          src={item.src}
+          alt={item.alt}
+          caption={item.caption}
+        />
+      ))}
+
       <div className="flex items-center justify-between gap-3">
         <h3 className="font-mono text-base font-semibold tracking-[-0.01em]">
           {project.name}
