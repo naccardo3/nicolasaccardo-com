@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
+import Footer from "@/components/Footer";
+import TopBar from "@/components/TopBar";
 import "./globals.css";
 
 const ibmPlexMono = IBM_Plex_Mono({
@@ -56,7 +58,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
       </head>
-      <body className="font-sans antialiased">{children}</body>
+      <body className="font-sans antialiased">
+        <TopBar />
+        <main id="top">{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }
