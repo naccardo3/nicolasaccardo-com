@@ -106,15 +106,20 @@ export default function ModelDemo() {
   const a = inputs.n / (inputs.n + 8);
   const final = a * raw + (1 - a) * MODEL.prior;
 
+  // Confidence tier: how far the prediction sits from the 50/50 baseline —
+  // a score near 50 means the model isn't saying much either way, a score
+  // far from 50 (in either direction) is a stronger signal. Distance ranges
+  // 0-50 since final ranges 0-100.
+  const distanceFromBaseline = Math.abs(final - MODEL.prior);
   const tierLabel =
-    a < 0.45
+    distanceFromBaseline < 10
       ? "Low confidence"
-      : a < 0.62
+      : distanceFromBaseline < 20
         ? "Moderate"
-        : a < 0.74
+        : distanceFromBaseline < 30
           ? "Strong"
           : "Very strong";
-  const tierLive = a >= 0.45;
+  const tierLive = distanceFromBaseline >= 10;
 
   return (
     <DemoShell
