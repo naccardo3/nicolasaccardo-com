@@ -2,7 +2,12 @@ import type { Metadata } from "next";
 import { IBM_Plex_Mono, IBM_Plex_Sans } from "next/font/google";
 import Footer from "@/components/Footer";
 import TopBar from "@/components/TopBar";
+import { siteUrl } from "@/lib/site";
 import "./globals.css";
+
+const NAME = "Nicolas Accardo";
+const DESCRIPTION =
+  "Nicolas Accardo — software engineer. Data pipelines, internal tools, and dashboards, built and deployed end to end.";
 
 const ibmPlexMono = IBM_Plex_Mono({
   weight: ["400", "500", "600"],
@@ -19,9 +24,28 @@ const ibmPlexSans = IBM_Plex_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "Nicolas Accardo",
-  description:
-    "Nicolas Accardo — software engineer. Data pipelines, internal tools, and dashboards, built and deployed end to end.",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: NAME,
+    template: `%s — ${NAME}`,
+  },
+  description: DESCRIPTION,
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    url: "/",
+    siteName: NAME,
+    title: NAME,
+    description: DESCRIPTION,
+    locale: "en_US",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: NAME,
+    description: DESCRIPTION,
+  },
 };
 
 export const viewport = {

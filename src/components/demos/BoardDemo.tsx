@@ -122,7 +122,7 @@ export default function BoardDemo() {
                       cell
                     ) : mode === "script" ? (
                       <>
-                        <span className="text-ink-dim line-through decoration-amber decoration-[1.5px]">
+                        <span className="text-ink-mid line-through decoration-amber decoration-[1.5px]">
                           {cell.o}
                         </span>
                         <br />
@@ -144,6 +144,8 @@ export default function BoardDemo() {
       </div>
 
       <p
+        role="status"
+        aria-live="polite"
         className={`mt-[0.9rem] flex items-center gap-[0.55rem] font-mono text-[0.7188rem] leading-[1.5] ${
           mode === "script" ? "text-accent" : "text-amber"
         }`}

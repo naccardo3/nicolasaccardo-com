@@ -1,31 +1,28 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState } from "react";
 import DemoShell from "@/components/demos/DemoShell";
 
-const STEPS: { at: number; key: string; label: ReactNode }[] = [
-  { at: 0, key: "read", label: "▶ Reading photo_0412.jpg" },
-  { at: 180, key: "ocr", label: "▶ EasyOCR scanning for stamp" },
+// icon/text kept separate from "done" styling — the checkmark needs to dim
+// along with the rest of a not-yet-reached row (see the render loop below),
+// which isn't possible if its color were baked in here.
+const STEPS: {
+  at: number;
+  key: string;
+  icon: "arrow" | "check";
+  text: string;
+}[] = [
+  { at: 0, key: "read", icon: "arrow", text: "Reading photo_0412.jpg" },
+  { at: 180, key: "ocr", icon: "arrow", text: "EasyOCR scanning for stamp" },
+  { at: 1250, key: "found", icon: "check", text: "Stamp region found" },
+  { at: 1500, key: "exif", icon: "arrow", text: "EXIF fallback not needed" },
   {
-    at: 1250,
-    key: "found",
-    label: (
-      <>
-        <b className="font-medium text-accent">✓</b> Stamp region found
-      </>
-    ),
+    at: 1850,
+    key: "render",
+    icon: "arrow",
+    text: "Rendering replacement (Pillow)",
   },
-  { at: 1500, key: "exif", label: "▶ EXIF fallback not needed" },
-  { at: 1850, key: "render", label: "▶ Rendering replacement (Pillow)" },
-  {
-    at: 2400,
-    key: "out",
-    label: (
-      <>
-        <b className="font-medium text-accent">✓</b> 1 photo written, 0 failures
-      </>
-    ),
-  },
+  { at: 2400, key: "out", icon: "check", text: "1 photo written, 0 failures" },
 ];
 
 const TOTAL_DURATION = 2600;
@@ -291,16 +288,28 @@ export default function PhotoDemo() {
           <div
             role="status"
             aria-live="polite"
-            className="min-h-[5.4rem] border-l border-rule pl-3 font-mono text-[0.6875rem] leading-[1.65] text-ink-dim"
+            className="min-h-[5.4rem] border-l border-rule pl-3 font-mono text-[0.6875rem] leading-[1.65]"
           >
-            {STEPS.map((step, i) => (
-              <div
-                key={step.key}
-                className={i <= stepIndex ? "" : "opacity-[.45]"}
-              >
-                {step.label}
-              </div>
-            ))}
+            {STEPS.map((step, i) => {
+              const done = i <= stepIndex;
+              return (
+                <div
+                  key={step.key}
+                  className={done ? "text-ink-mid" : "text-ink-dim"}
+                >
+                  {step.icon === "check" ? (
+                    <b
+                      className={`font-medium ${done ? "text-accent" : "text-ink-dim"}`}
+                    >
+                      ✓
+                    </b>
+                  ) : (
+                    "▶"
+                  )}{" "}
+                  {step.text}
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
