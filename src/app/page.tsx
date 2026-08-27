@@ -1,8 +1,9 @@
 import ThemeToggle from "@/components/ThemeToggle";
+import { projects } from "@/content/projects";
 
-// Temporary Phase 2 verification harness — exercises every design token,
-// the font pipeline, and the theme toggle. Replaced with real content in
-// Phase 3/4.
+// Temporary Phase 2/3 verification harness — exercises every design token,
+// the font pipeline, the theme toggle, and now the projects data shape.
+// Replaced with real content in Phase 4.
 export default function Home() {
   return (
     <div className="min-h-screen bg-ground text-ink">
@@ -61,6 +62,23 @@ export default function Home() {
         <a href="#" className="w-fit">
           A link, underlined with accent-line and solid accent on hover
         </a>
+
+        <div className="flex flex-col gap-3">
+          <h2 className="font-mono text-eyebrow uppercase text-ink-dim">
+            Projects data check — {projects.length} total (
+            {projects.filter((p) => p.featured).length} featured,{" "}
+            {projects.filter((p) => !p.featured).length} compact)
+          </h2>
+          <ul className="flex flex-col gap-2 font-mono text-spec">
+            {projects.map((p) => (
+              <li key={p.slug} className="text-ink-mid">
+                <span className="text-ink">{p.name}</span> — {p.status} —{" "}
+                {p.tags.join(", ")} — {p.beats.length} beats
+                {p.links ? ` — ${p.links.length} link(s)` : ""}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
