@@ -31,6 +31,31 @@ function band(v: number, stops: [number, string][]): string {
   return stops[stops.length - 1][1];
 }
 
+// The real app's five-band scoring legend: a contiguous partition of the
+// 0-100 composite, not a confidence measure. Low scores favor NRFI, high
+// scores favor YRFI, and the 45-56 band is called out as near-random.
+type Tone = "nrfi" | "coinflip" | "yrfi";
+
+function scoringTier(score: number): { label: string; tone: Tone } {
+  if (score < 40) return { label: "Strong NRFI", tone: "nrfi" };
+  if (score <= 44) return { label: "Moderate NRFI", tone: "nrfi" };
+  if (score <= 56) return { label: "Coin Flip", tone: "coinflip" };
+  if (score <= 65) return { label: "Moderate YRFI", tone: "yrfi" };
+  return { label: "Strong YRFI", tone: "yrfi" };
+}
+
+const TONE_CHIP_CLASS: Record<Tone, string> = {
+  nrfi: "border-accent-line bg-accent-soft text-accent",
+  coinflip: "border-rule text-ink-dim",
+  yrfi: "border-amber-line bg-amber-soft text-amber",
+};
+
+const TONE_DOT_VARIANT: Record<Tone, "live" | "neutral" | "build"> = {
+  nrfi: "live",
+  coinflip: "neutral",
+  yrfi: "build",
+};
+
 function normalize(inputs: Inputs) {
   return {
     era: Math.min(1, inputs.era / 100 / 9),
@@ -105,21 +130,7 @@ export default function ModelDemo() {
   ).reduce((sum, k) => sum + MODEL.weights[k] * norm[k], 0);
   const a = inputs.n / (inputs.n + 8);
   const final = a * raw + (1 - a) * MODEL.prior;
-
-  // Confidence tier: how far the prediction sits from the 50/50 baseline —
-  // a score near 50 means the model isn't saying much either way, a score
-  // far from 50 (in either direction) is a stronger signal. Distance ranges
-  // 0-50 since final ranges 0-100.
-  const distanceFromBaseline = Math.abs(final - MODEL.prior);
-  const tierLabel =
-    distanceFromBaseline < 10
-      ? "Low confidence"
-      : distanceFromBaseline < 20
-        ? "Moderate"
-        : distanceFromBaseline < 30
-          ? "Strong"
-          : "Very strong";
-  const tierLive = distanceFromBaseline >= 10;
+  const tier = scoringTier(Math.round(final));
 
   return (
     <DemoShell
@@ -235,14 +246,10 @@ export default function ModelDemo() {
                 </span>
               </div>
               <span
-                className={`inline-flex items-center gap-2 rounded-[2px] border px-[0.6rem] py-[0.3rem] font-mono text-[0.6875rem] font-medium tracking-[0.11em] whitespace-nowrap uppercase ${
-                  tierLive
-                    ? "border-accent-line bg-accent-soft text-accent"
-                    : "border-rule text-ink-dim"
-                }`}
+                className={`inline-flex items-center gap-2 rounded-[2px] border px-[0.6rem] py-[0.3rem] font-mono text-[0.6875rem] font-medium tracking-[0.11em] whitespace-nowrap uppercase ${TONE_CHIP_CLASS[tier.tone]}`}
               >
-                <Dot variant={tierLive ? "live" : "neutral"} />
-                {tierLabel}
+                <Dot variant={TONE_DOT_VARIANT[tier.tone]} />
+                {tier.label}
               </span>
             </div>
             <div
