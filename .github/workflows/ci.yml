@@ -25,6 +25,14 @@ jobs:
       - name: Format check
         run: npm run format:check
 
+      # Next.js's ambient route types (LayoutProps, PageProps, etc.) only
+      # exist in .next/types after next build/dev/typegen has run at least
+      # once. A fresh checkout has no .next/ at all, so tsc fails without
+      # this — generate the types first rather than relying on a full build
+      # to have run before the typecheck step.
+      - name: Generate route types
+        run: npx next typegen
+
       - name: Typecheck
         run: npx tsc --noEmit
 
