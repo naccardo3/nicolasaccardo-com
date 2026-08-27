@@ -24,6 +24,15 @@
   --track: #26302c;
   --shadow: 0 1px 0 rgba(255, 255, 255, 0.02) inset;
   --lift: 0 6px 22px rgba(0, 0, 0, 0.35);
+  /* PhotoDemo's mock job-site photo background — deliberately outside the
+     semantic palette (it's illustrating a photograph, not UI chrome), but
+     still theme-aware like everything else. */
+  --photo-mock-gradient: linear-gradient(
+    180deg,
+    #4a5551 0%,
+    #3b4542 46%,
+    #232b28 100%
+  );
 }
 
 @media (prefers-color-scheme: light) {
@@ -45,6 +54,12 @@
     --track: #dfe5e1;
     --shadow: 0 1px 2px rgba(18, 25, 22, 0.04);
     --lift: 0 6px 20px rgba(18, 25, 22, 0.09);
+    --photo-mock-gradient: linear-gradient(
+      170deg,
+      #8e9a95 0%,
+      #77837e 42%,
+      #5d6864 100%
+    );
   }
 }
 
@@ -66,6 +81,12 @@
   --track: #dfe5e1;
   --shadow: 0 1px 2px rgba(18, 25, 22, 0.04);
   --lift: 0 6px 20px rgba(18, 25, 22, 0.09);
+  --photo-mock-gradient: linear-gradient(
+    170deg,
+    #8e9a95 0%,
+    #77837e 42%,
+    #5d6864 100%
+  );
 }
 
 /* Sun/moon icon swap for the theme toggle — same override
@@ -149,6 +170,7 @@
 
   --animate-status-ping: status-ping 2.6s cubic-bezier(0.2, 0.6, 0.3, 1)
     infinite;
+  --animate-scan-sweep: scan-sweep 1.05s cubic-bezier(0.4, 0, 0.5, 1) forwards;
 }
 
 @keyframes status-ping {
@@ -162,6 +184,20 @@
   }
   100% {
     opacity: 0;
+  }
+}
+
+@keyframes scan-sweep {
+  0% {
+    opacity: 0.9;
+    top: 0;
+  }
+  92% {
+    opacity: 0.9;
+  }
+  100% {
+    opacity: 0;
+    top: 100%;
   }
 }
 
