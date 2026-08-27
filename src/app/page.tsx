@@ -1,69 +1,67 @@
-import Image from "next/image";
+import ThemeToggle from "@/components/ThemeToggle";
 
+// Temporary Phase 2 verification harness — exercises every design token,
+// the font pipeline, and the theme toggle. Replaced with real content in
+// Phase 3/4.
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-ground text-ink">
+      <div className="wrap flex items-center justify-between py-4">
+        <span className="font-mono text-label uppercase tracking-[0.14em]">
+          Design system check
+        </span>
+        <ThemeToggle />
+      </div>
+
+      <div className="wrap flex flex-col gap-10 pb-16">
+        <h1 className="font-mono text-hero text-balance">
+          I build software that ends up running somewhere.
+        </h1>
+
+        <p className="max-w-measure text-ink-mid">
+          Body copy in IBM Plex Sans, at the 1.0625rem / 1.62 line-height spec
+          from CLAUDE.md. This paragraph is capped at the 68ch measure via the{" "}
+          <code className="font-mono text-spec">max-w-measure</code> utility.
+        </p>
+
+        <h3 className="font-mono text-title">Project title token</h3>
+        <span className="font-mono text-eyebrow uppercase text-ink-dim">
+          Section eyebrow token
+        </span>
+
+        <div className="flex flex-wrap gap-3">
+          <span className="inline-flex items-center gap-2 rounded-[2px] border border-accent-line bg-accent-soft px-3 py-1 font-mono text-label uppercase text-accent">
+            <span className="h-[7px] w-[7px] rounded-full bg-accent" />
+            Live chip
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-[2px] border border-amber-line bg-amber-soft px-3 py-1 font-mono text-label uppercase text-amber">
+            <span className="h-[7px] w-[7px] rounded-full bg-amber" />
+            Building chip
+          </span>
+          <span className="inline-flex items-center gap-2 rounded-[2px] border border-rule px-3 py-1 font-mono text-label uppercase text-ink-dim">
+            <span className="h-[7px] w-[7px] rounded-full bg-ink-dim" />
+            Shipped chip
+          </span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        <dl className="rounded-[3px] border border-rule-soft bg-surface p-4 font-mono text-spec shadow-panel">
+          <div className="flex gap-6">
+            <dt className="text-ink-dim uppercase">Stack</dt>
+            <dd className="text-ink-mid">Next.js · Tailwind v4 · TypeScript</dd>
+          </div>
+        </dl>
+
+        <div className="flex gap-4">
+          <div className="h-16 w-16 rounded-[3px] border border-rule bg-ground" />
+          <div className="h-16 w-16 rounded-[3px] border border-rule bg-surface" />
+          <div className="h-16 w-16 rounded-[3px] border border-rule bg-raise" />
+          <div className="h-16 w-16 rounded-[3px] border border-rule bg-track" />
         </div>
-      </main>
+
+        <a href="#" className="w-fit">
+          A link, underlined with accent-line and solid accent on hover
+        </a>
+      </div>
     </div>
   );
 }
