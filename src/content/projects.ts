@@ -82,12 +82,12 @@ export const projects: Project[] = [
     name: "Photo Stamp Replacer",
     status: "production",
     tagline:
-      "A desktop app that replaces the timestamp burned into job-site photos with project information. Runs entirely on the employee's own machine — no upload, no account, no network.",
+      "A desktop app that pulls a project's photos straight from CompanyCam and stamps each one with the project name, address, and date formatted for NYCHA documentation.",
     spec: [
       {
         label: "Stack",
         value:
-          "Python · Flask · EasyOCR · Pillow · Next.js · PyInstaller · Inno Setup",
+          "Python · Flask · Pillow · CompanyCam API · Next.js · PyInstaller · Inno Setup",
       },
       {
         label: "Where",
@@ -98,7 +98,7 @@ export const projects: Project[] = [
     beats: [
       {
         heading: "How it works",
-        body: "A Flask API serves a statically-exported Next.js frontend on localhost, opens the browser, and sits in the system tray. EasyOCR locates the existing stamp; when OCR can't read it, EXIF metadata is the fallback. Pillow renders the replacement. Photos go in as a ZIP and come out as a ZIP, with failures logged and skipped rather than killing the whole batch.",
+        body: "A Flask API serves a statically-exported Next.js frontend on localhost and sits in the system tray. Picking a project and date range pulls its photos straight from CompanyCam's API, and Pillow stamps each one with the project name, formatted date and time, and address — layered next to CompanyCam's own timestamp, not replacing it. The batch comes back as a single ZIP.",
       },
       {
         heading: "The hard part",

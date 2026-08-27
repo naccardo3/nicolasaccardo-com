@@ -12,15 +12,24 @@ const STEPS: {
   icon: "arrow" | "check";
   text: string;
 }[] = [
-  { at: 0, key: "read", icon: "arrow", text: "Reading photo_0412.jpg" },
-  { at: 180, key: "ocr", icon: "arrow", text: "EasyOCR scanning for stamp" },
-  { at: 1250, key: "found", icon: "check", text: "Stamp region found" },
-  { at: 1500, key: "exif", icon: "arrow", text: "EXIF fallback not needed" },
+  {
+    at: 0,
+    key: "fetch",
+    icon: "arrow",
+    text: "Fetching photo_0412.jpg from CompanyCam",
+  },
+  { at: 700, key: "fetched", icon: "check", text: "Photo fetched" },
+  {
+    at: 1100,
+    key: "format",
+    icon: "arrow",
+    text: "Formatting project, date, address",
+  },
   {
     at: 1850,
     key: "render",
     icon: "arrow",
-    text: "Rendering replacement (Pillow)",
+    text: "Stamping photo (Pillow)",
   },
   { at: 2400, key: "out", icon: "check", text: "1 photo written, 0 failures" },
 ];
@@ -28,7 +37,6 @@ const STEPS: {
 const TOTAL_DURATION = 2600;
 
 type Phase = "idle" | "running" | "done";
-type Box = { left: number; top: number; width: number; height: number };
 
 const BTN_BASE =
   "inline-flex items-center justify-center gap-[0.55rem] rounded-[2px] border px-[0.75rem] py-[0.45rem] font-mono text-[0.6875rem] tracking-[0.1em] uppercase transition-colors duration-150 disabled:cursor-default disabled:opacity-[.45]";
@@ -40,14 +48,9 @@ const BTN_NEUTRAL =
 export default function PhotoDemo() {
   const [phase, setPhase] = useState<Phase>("idle");
   const [stepIndex, setStepIndex] = useState(-1);
-  const [detectOn, setDetectOn] = useState(false);
-  const [detectBox, setDetectBox] = useState<Box | null>(null);
-  const [stampReplaced, setStampReplaced] = useState(false);
-  const [stampFaded, setStampFaded] = useState(false);
+  const [newStampOn, setNewStampOn] = useState(false);
   const [scanKey, setScanKey] = useState(0);
 
-  const stampRef = useRef<HTMLDivElement>(null);
-  const photoRef = useRef<HTMLDivElement>(null);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
 
   function clearTimers() {
@@ -57,42 +60,15 @@ export default function PhotoDemo() {
 
   useEffect(() => clearTimers, []);
 
-  function measureBox() {
-    const stampEl = stampRef.current;
-    const photoEl = photoRef.current;
-    if (!stampEl || !photoEl) return;
-    const s = stampEl.getBoundingClientRect();
-    const p = photoEl.getBoundingClientRect();
-    setDetectBox({
-      left: s.left - p.left - 3,
-      top: s.top - p.top - 3,
-      width: s.width + 6,
-      height: s.height + 6,
-    });
-  }
-
-  useEffect(() => {
-    function onResize() {
-      if (detectOn) measureBox();
-    }
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, [detectOn]);
-
   function finishInstantly() {
-    measureBox();
-    setDetectOn(true);
-    setStampReplaced(true);
-    setStampFaded(false);
+    setNewStampOn(true);
     setStepIndex(STEPS.length - 1);
     setPhase("done");
   }
 
   function resetDemo() {
     clearTimers();
-    setDetectOn(false);
-    setStampReplaced(false);
-    setStampFaded(false);
+    setNewStampOn(false);
     setStepIndex(-1);
     setPhase("idle");
   }
@@ -107,9 +83,7 @@ export default function PhotoDemo() {
     }
 
     setPhase("running");
-    setDetectOn(false);
-    setStampReplaced(false);
-    setStampFaded(false);
+    setNewStampOn(false);
     setStepIndex(-1);
     setScanKey((k) => k + 1);
 
@@ -117,17 +91,8 @@ export default function PhotoDemo() {
       timers.current.push(
         setTimeout(() => {
           setStepIndex(i);
-          if (step.key === "found") {
-            measureBox();
-            setDetectOn(true);
-          }
-          if (step.key === "render") {
-            setStampFaded(true);
-          }
           if (step.key === "out") {
-            setStampReplaced(true);
-            setStampFaded(false);
-            requestAnimationFrame(measureBox);
+            setNewStampOn(true);
           }
         }, step.at),
       );
@@ -165,11 +130,10 @@ export default function PhotoDemo() {
           {buttonLabel}
         </button>
       }
-      note="Illustration of the OCR-and-restamp pipeline on a stand-in image. The real tool batches a ZIP of photos at a time and falls back to EXIF metadata when OCR can't read the stamp."
+      note="Illustration of the CompanyCam pull-and-stamp pipeline on a stand-in image. The real tool fetches a project's photos for a date range from CompanyCam and stamps the whole batch as a ZIP."
     >
       <div className="grid grid-cols-1 items-center gap-[1.4rem] min-[641px]:grid-cols-[minmax(0,440px)_1fr]">
         <div
-          ref={photoRef}
           style={{ background: "var(--photo-mock-gradient)" }}
           className="relative aspect-[3/2] overflow-hidden rounded-[3px] border border-rule-soft"
         >
@@ -246,20 +210,6 @@ export default function PhotoDemo() {
           </svg>
 
           <div
-            aria-hidden="true"
-            className="pointer-events-none absolute rounded-[2px] border border-accent transition-opacity duration-200"
-            style={{
-              opacity: detectOn ? 1 : 0,
-              left: detectBox?.left ?? 0,
-              top: detectBox?.top ?? 0,
-              width: detectBox?.width ?? 0,
-              height: detectBox?.height ?? 0,
-              right: "auto",
-              bottom: "auto",
-            }}
-          />
-
-          <div
             key={scanKey}
             aria-hidden="true"
             className={`pointer-events-none absolute inset-x-0 top-0 h-0.5 bg-accent opacity-0 shadow-[0_0_12px_2px_var(--accent)] ${
@@ -267,20 +217,17 @@ export default function PhotoDemo() {
             }`}
           />
 
+          <div className="absolute right-2 bottom-2 rounded-[2px] bg-black/62 px-[0.45rem] py-[0.24rem] font-mono text-[0.625rem] leading-[1.35] tracking-[0.03em] whitespace-nowrap text-white">
+            03/14/2026&nbsp;&nbsp;09:41&nbsp;AM
+          </div>
+
           <div
-            ref={stampRef}
-            style={{ opacity: stampFaded ? 0 : 1 }}
-            className="absolute right-2 bottom-2 rounded-[2px] bg-black/62 px-[0.45rem] py-[0.24rem] font-mono text-[0.625rem] leading-[1.35] tracking-[0.03em] whitespace-nowrap text-white transition-opacity duration-[250ms]"
+            style={{ opacity: newStampOn ? 1 : 0 }}
+            className="absolute bottom-2 left-2 rounded-[2px] bg-black/62 px-[0.45rem] py-[0.24rem] font-mono text-[0.625rem] leading-[1.35] tracking-[0.03em] whitespace-nowrap text-white transition-opacity duration-[250ms]"
           >
-            {stampReplaced ? (
-              <>
-                BX — 149TH ST
-                <br />
-                UNIT 4 · ABATEMENT
-              </>
-            ) : (
-              <>03/14/2026&nbsp;&nbsp;09:41&nbsp;AM</>
-            )}
+            BX — 149TH ST
+            <br />
+            UNIT 4 · ABATEMENT
           </div>
         </div>
 
