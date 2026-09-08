@@ -120,7 +120,7 @@ export const projects: Project[] = [
   {
     slug: "joc-weekly-schedule",
     name: "JOC Weekly Schedule",
-    status: "production",
+    status: "running",
     tagline:
       "A wall-mounted TV board showing who's working which job this week — tap-to-edit, synced live with the Google Sheet the office already keeps.",
     spec: [
@@ -150,8 +150,9 @@ export const projects: Project[] = [
     media: [
       {
         src: "/media/joc-weekly-schedule.jpg",
-        alt: "Wall-mounted TV display showing the JOC weekly crew schedule",
-        caption: "The board on the office wall, mid-week.",
+        alt: "The JOC Weekly Schedule board: seven day columns of supervisor, project, APM, foreman, and shift assignments, with the current day tinted",
+        caption:
+          "The live board, mid-week. Names are blurred \u2014 the schedule is real.",
       },
     ],
   },
