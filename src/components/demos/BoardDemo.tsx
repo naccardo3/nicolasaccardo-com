@@ -6,52 +6,53 @@ import DemoShell from "@/components/demos/DemoShell";
 
 type Cell = string | { o: string; n: string };
 
-const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri"];
-// Wednesday, 0-indexed among the 5 day columns — matches the reference
-// site's TODAY constant (1-indexed among day cells there).
-const TODAY_INDEX = 2;
+const DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
+// Thursday — an arbitrary mid-week pick for the illustration.
+const TODAY_INDEX = 3;
 
-// Same four crews and three mid-week reassignments as the real board.
-const ROWS: { crew: string; days: Cell[] }[] = [
+// Four illustrative supervisor rows and three mid-week reassignments —
+// the real board has no crew-labeled rows, just per-day project codes
+// entered against a supervisor; these codes are invented, not real jobs.
+const ROWS: { supervisor: string; days: Cell[] }[] = [
   {
-    crew: "Crew 07",
+    supervisor: "Priya",
     days: [
-      "Bronx — 149th St",
-      "Bronx — 149th St",
-      { o: "Bronx — 149th St", n: "Queens — Astoria Blvd" },
-      "Queens — Astoria Blvd",
-      "Queens — Astoria Blvd",
+      "K215 - BU",
+      "K215 - BU",
+      { o: "K215 - BU", n: "X042 - LAB" },
+      "X042 - LAB",
+      "X042 - LAB",
+      "—",
+      "—",
     ],
   },
   {
-    crew: "Crew 12",
+    supervisor: "Marcus",
     days: [
-      "Brooklyn — Flatbush",
-      "Brooklyn — Flatbush",
-      "Brooklyn — Flatbush",
-      { o: "Brooklyn — Flatbush", n: "Bronx — Grand Conc." },
-      "Bronx — Grand Conc.",
+      "M310 - CTF",
+      "M310 - CTF",
+      "M310 - CTF",
+      { o: "M310 - CTF", n: "Q188 - POT" },
+      "Q188 - POT",
+      "Q188 - POT",
+      "—",
     ],
   },
   {
-    crew: "Crew 19",
+    supervisor: "Dana",
     days: [
-      "Manhattan — W 34th",
-      { o: "Manhattan — W 34th", n: "Staten Is. — Bay St" },
-      "Staten Is. — Bay St",
-      "Staten Is. — Bay St",
-      "Yard",
+      "R220 - CTF",
+      { o: "R220 - CTF", n: "X155 - LAB" },
+      "X155 - LAB",
+      "X155 - LAB",
+      "X155 - LAB",
+      "—",
+      "—",
     ],
   },
   {
-    crew: "Crew 24",
-    days: [
-      "Yard",
-      "Bronx — Hunts Pt",
-      "Bronx — Hunts Pt",
-      "Bronx — Hunts Pt",
-      "Bronx — Hunts Pt",
-    ],
+    supervisor: "Theo",
+    days: ["—", "K330 - BU", "K330 - BU", "K330 - BU", "K330 - BU", "—", "—"],
   },
 ];
 
@@ -88,15 +89,17 @@ export default function BoardDemo() {
           </button>
         </span>
       }
-      note="The office marks a mid-week reassignment by striking through the old site. Flip the backend to see what a plain CSV export does to that."
+      note="The office marks a mid-week reassignment by striking through the old project code. Flip the backend to see what a plain CSV export does to that."
     >
       <div className="overflow-x-auto">
         <table className="w-full border-collapse font-mono text-xs">
-          <caption className="sr-only">Crew assignments for the week</caption>
+          <caption className="sr-only">
+            Supervisor project assignments for the week
+          </caption>
           <thead>
             <tr>
               <th scope="col" className={HEADER_CELL_CLASS}>
-                Crew
+                Supers
               </th>
               {DAYS.map((day) => (
                 <th key={day} scope="col" className={HEADER_CELL_CLASS}>
@@ -107,9 +110,9 @@ export default function BoardDemo() {
           </thead>
           <tbody>
             {ROWS.map((row) => (
-              <tr key={row.crew}>
+              <tr key={row.supervisor}>
                 <th scope="row" className={HEADER_CELL_CLASS}>
-                  {row.crew}
+                  {row.supervisor}
                 </th>
                 {row.days.map((cell, i) => (
                   <td
@@ -152,8 +155,8 @@ export default function BoardDemo() {
       >
         <Dot variant={mode === "script" ? "live" : "build"} />
         {mode === "script"
-          ? "3 reassignments read correctly — the cancelled site stays struck through."
-          : "3 cells now show two active sites with no way to tell which one was cancelled."}
+          ? "3 reassignments read correctly — the earlier project code stays struck through."
+          : "3 cells now show two project codes with no way to tell which one was cancelled."}
       </p>
     </DemoShell>
   );

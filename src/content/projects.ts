@@ -122,7 +122,7 @@ export const projects: Project[] = [
     name: "JOC Weekly Schedule",
     status: "production",
     tagline:
-      "A wall-mounted TV board showing which crews are where this week, mirrored live from the Google Sheet the office already keeps.",
+      "A wall-mounted TV board showing who's working which job this week — tap-to-edit, synced live with the Google Sheet the office already keeps.",
     spec: [
       {
         label: "Stack",
@@ -137,11 +137,11 @@ export const projects: Project[] = [
     beats: [
       {
         heading: "How it works",
-        body: "Three tiers, with the sheet left as the source of truth so the office never changes how it works. A bound Apps Script web app parses the grid and serves it as JSON; a Next.js dashboard renders a seven-supervisor by seven-day board with the current day tinted, thirty-second polling behind a visible sync indicator, editable cells that write back, and a ten-minute self-reload so a screen left on for a month doesn't quietly drift.",
+        body: "Three tiers, with the sheet left as the source of truth so the office never changes how it works. A bound Apps Script web app parses the grid — each day split into supervisor, project, assistant PM, foreman, and shift columns validated against a shared crew list — and serves it as JSON; a Next.js dashboard renders it as a seven-day board with the current day tinted, thirty-second polling behind a visible sync indicator, tap-to-edit cells that write straight back into the sheet, and a ten-minute self-reload so a screen left on for a month doesn't quietly drift.",
       },
       {
         heading: "The hard part",
-        body: "A constraint nobody said out loud. The obvious build is a CSV export of the sheet — but CSV drops strikethrough formatting, and **strikethrough is how the office signals a mid-week crew reassignment**. Shipping the obvious version would have silently destroyed the exact information the board exists to carry. The Apps Script backend exists specifically to read rich-text runs and preserve it.",
+        body: "A constraint nobody said out loud. The obvious build is a CSV export of the sheet — but CSV drops strikethrough formatting, and **strikethrough is how the office signals a mid-week reassignment**. Shipping the obvious version would have silently destroyed the exact information the board exists to carry. The Apps Script backend exists specifically to read rich-text runs and preserve it.",
       },
     ],
     tags: ["typescript", "react", "pipelines"],
